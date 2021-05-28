@@ -130,6 +130,18 @@ spec:
           - name: MB_SESSION_COOKIES
             value: {{ .Values.session.sessionCookies | quote }}
           {{- end }}
+          {{- if .Values.httpsKeyStore.enable }}
+          {{- $jKSFilePath :=  printf "%s/%s" .Values.httpsKeyStore.path .Values.httpsKeyStore.fileName }}
+          - name: javax.net.ssl.trustStore
+            value: {{ $jKSFilePath | quote }}
+          - name: javax.net.ssl.trustStorePassword
+            valueFrom:
+              secretKeyRef:
+                name: {{ if .Values.httpsKeyStore.jksSecretName }} {{ .Values.httpsKeyStore.jksSecretName }} {{ else }} {{ template "matabase.fullname" . }}-https-jks  {{ end }}
+                key: {{ "password" | quote }}
+          - name: _JAVA_OPTIONS
+            value: '-Djavax.net.ssl.trustStorePassword=$(javax.net.ssl.trustStorePassword) -Djavax.net.ssl.trustStore=$(javax.net.ssl.trustStore) -Djavax.net.ssl.keyStorePassword=c$(javax.net.ssl.trustStorePassword) -Djavax.net.ssl.keyStore=$(javax.net.ssl.trustStore)'
+          {{- end }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
@@ -146,10 +158,16 @@ spec:
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-          {{- if .Values.log4jProperties }}
+          {{- if or .Values.log4jProperties .Values.httpsKeyStore.enable }}
           volumeMounts:
+          {{- if .Values.log4jProperties }}
             - name: config
               mountPath: /tmp/conf/
+          {{- end}}
+          {{- if .Values.httpsKeyStore.enable }}
+            - name: https-keystore
+              mountPath: {{ .Values.httpsKeyStore.path }}
+          {{- end}}
           {{- end}}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -174,4 +192,12 @@ spec:
             items:
             - key: log4j.properties
               path: log4j.properties
+        {{- end }}
+        {{- if .Values.httpsKeyStore.enable }}
+        - name: https-keystore
+          secret:
+            secretName: {{ if .Values.httpsKeyStore.jksSecretName }} {{ .Values.httpsKeyStore.jksSecretName }} {{ else }} {{ template "metabase.fullname" . }}-https-jks  {{ end }}
+            items:
+            - key: keystore.jks
+              path: {{ .Values.httpsKeyStore.fileName }}
         {{- end }}

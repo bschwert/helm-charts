@@ -13,7 +13,7 @@ This chart bootstraps a [Metabase](https://github.com/metabase/metabase) deploym
 ## Get Repo Info
 
 ```bash
-helm repo add pmint93 https://pmint93.github.io/helm-charts
+helm repo add bschwert https://bschwert.github.io/helm-charts
 helm repo update
 ```
 
@@ -23,10 +23,10 @@ See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation.
 
 ```bash
 # Helm 3
-$ helm install [RELEASE_NAME] pmint93/metabase
+$ helm install [RELEASE_NAME] bschwert/metabase
 
 # Helm 2
-$ helm install --name [RELEASE_NAME] pmint93/metabase
+$ helm install --name [RELEASE_NAME] bschwert/metabase
 ```
 
 The command deploys Metabase on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
