@@ -137,7 +137,7 @@ spec:
           - name: javax.net.ssl.trustStorePassword
             valueFrom:
               secretKeyRef:
-                name: {{ if .Values.httpsKeyStore.jksSecretName }} {{ .Values.httpsKeyStore.jksSecretName }} {{ else }} {{ template "matabase.fullname" . }}-https-jks  {{ end }}
+                name: {{ if .Values.httpsKeyStore.jksSecretName }} {{ .Values.httpsKeyStore.jksSecretName }} {{ else }} {{ template "metabase.fullname" . }}-https-jks  {{ end }}
                 key: {{ "password" | quote }}
           - name: _JAVA_OPTIONS
             value: '-Djavax.net.ssl.trustStorePassword=$(javax.net.ssl.trustStorePassword) -Djavax.net.ssl.trustStore=$(javax.net.ssl.trustStore) -Djavax.net.ssl.keyStorePassword=c$(javax.net.ssl.trustStorePassword) -Djavax.net.ssl.keyStore=$(javax.net.ssl.trustStore)'

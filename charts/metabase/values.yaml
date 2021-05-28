@@ -53,11 +53,12 @@ database:
 
 httpsKeyStore:
   enable: false
-  jksSecretName: 'metabase-jks-sec'
+  # Configure jksSecretName or keyStoreBase64Encoded and password to create a default secret
+  # jksSecretName: 'metabase-jks-sec'
   path: "/etc/metabase_keystore"
   fileName: "keystore.jks"
   # password: "changeit"
-  # jenkinsKeyStoreBase64Encoded: 
+  # keyStoreBase64Encoded: 
 
 password:
   # Changing Metabase password complexity:
