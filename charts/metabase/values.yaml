@@ -7,7 +7,7 @@ podAnnotations: {}
 podLabels: {}
 image:
   repository: metabase/metabase
-  tag: v0.36.3
+  tag: v0.39.3
   command: []
   pullPolicy: IfNotPresent
 
@@ -58,7 +58,7 @@ httpsKeyStore:
   path: "/etc/metabase_keystore"
   fileName: "keystore.jks"
   # password: "changeit"
-  # keyStoreBase64Encoded: 
+  # keyStoreBase64Encoded:
 
 password:
   # Changing Metabase password complexity:
